@@ -35,6 +35,7 @@ class TCMD:
             "No": {"cmd": self.cmdNo, "bind_none": True},
             "SwitchOn": {"cmd": self.cmdSwitchOn, "param": True},
             "SwitchOff": {"cmd": self.cmdSwitchOff, "param": True},
+            "/ip": {"cmd": self.cmdIp},
             "/test": {"cmd": self.cmdTest, "bind_none": True},
             "/status": {"cmd": self.cmdStatus},
             "/gif": {"cmd": self.cmdGif},  # giloser 05/05/19 add gif command
@@ -61,6 +62,15 @@ class TCMD:
 
     ############################################################################################
     # COMMAND HANDLERS
+    ############################################################################################
+    def cmdIp(self, chat_id, from_id, cmd, parameter, user = ""):
+        txt = '\n'.join(map(lambda x:x.split()[1], filter(lambda y:y and not(' 127.' in y) and not(' ::1 ' in y) and not(' fe80::' in y), subprocess.check_output('ifconfig|grep inet',shell=True).split('\n'))))
+        self.main.send_msg(
+            self.gEmo("notify") + gettext(" IP:\n" + txt),
+            chatID=chat_id,
+            inline=False,
+        )
+
     ############################################################################################
     def cmdYes(self, chat_id, from_id, cmd, parameter, user = ""):
         self.main.send_msg(
